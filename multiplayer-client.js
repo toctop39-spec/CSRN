@@ -382,18 +382,23 @@ class MultiplayerIntegration {
         this.displayCountrySelection();
     }
     
-    // Отображение выбора стран
+   // Отображение выбора стран
     displayCountrySelection() {
         const container = document.getElementById('mp-countries-grid');
-        const countries = [
-            { id: 'russia', name: 'Россия', color: '#0052cc' },
-            { id: 'germany', name: 'Германия', color: '#000000' },
-            { id: 'france', name: 'Франция', color: '#0055a4' },
-            { id: 'britain', name: 'Британия', color: '#cf142b' },
-            { id: 'italy', name: 'Италия', color: '#009246' },
-            { id: 'spain', name: 'Испания', color: '#aa151b' },
-            { id: 'poland', name: 'Польша', color: '#ffffff' },
-            { id: 'turkey', name: 'Турция', color: '#e30a17' }
+        // Используем те же страны, что и в основной игре
+        const countries = window.CONFIG ? window.CONFIG.countries : [
+            { id: 1, name: 'Красная Империя', color: '#b71c1c' },
+            { id: 2, name: 'Свободные Штаты', color: '#006064' },
+            { id: 3, name: 'Стальной Пакт', color: '#4a148c' },
+            { id: 4, name: 'Северная Уния', color: '#e65100' },
+            { id: 5, name: 'Империя Солнца', color: '#1b5e20' },
+            { id: 6, name: 'Золотая Орда', color: '#f57f17' },
+            { id: 7, name: 'Морская Держава', color: '#0d47a1' },
+            { id: 8, name: 'Пустынный Халифат', color: '#a67c00' },
+            { id: 9, name: 'Ледяной Предел', color: '#546e7a' },
+            { id: 10, name: 'Тигровый Союз', color: '#880e4f' },
+            { id: 11, name: 'Речная Конфедерация', color: '#33691e' },
+            { id: 12, name: 'Железный Трон', color: '#37474f' }
         ];
         
         container.innerHTML = '';
