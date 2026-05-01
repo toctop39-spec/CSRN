@@ -1,0 +1,31 @@
+services:
+  # Тип: веб-сервис
+  type: web
+  name: csrn-multiplayer
+  
+  # Конфигурация рантайма
+  runtime: node
+  
+  # Версия Node.js
+  env: node
+  
+  # Корневая директория
+  rootDir: .
+  
+  # Команда для запуска
+  buildCommand: npm install
+  startCommand: node server.js
+  
+  # Переменные окружения
+  envVars:
+    key: NODE_ENV
+    value: production
+    
+  # Настройки здоровья
+  healthCheckPath: /
+  
+  # Настройки автоматического развертывания
+  autoDeploy: true
+  
+  # Порты (Render автоматически выберет порт)
+  plan: free
