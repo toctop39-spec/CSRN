@@ -11,9 +11,12 @@ class MultiplayerClient {
         
         // Конфигурация
         this.serverUrl = window.location.origin; // Для локального тестирования
-        // this.serverUrl = 'https://csrn.onrender.com'; // Для production
-        
-        this.setupEventHandlers();
+        // this.serverUrl = 'https://your-app.onrender.com'; // Для production
+    }
+    
+    // Настройка обработчиков событий
+    setupEventHandlers() {
+        // Этот метод будет вызываться после создания socket соединения
     }
     
     // Подключение к серверу
@@ -28,6 +31,11 @@ class MultiplayerClient {
             transports: ['websocket', 'polling']
         });
         
+        this.setupSocketEventHandlers();
+    }
+    
+    // Настройка обработчиков событий сокета
+    setupSocketEventHandlers() {
         this.socket.on('connect', () => {
             this.isConnected = true;
             this.playerId = this.socket.id;
