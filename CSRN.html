@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -698,6 +698,15 @@
     <div class="hoi-corner-tl"></div><div class="hoi-corner-tr"></div>
     <div class="hoi-corner-bl"></div><div class="hoi-corner-br"></div>
     <span style="padding:6px 12px;display:block;">WASD — Камера &nbsp;|&nbsp; ЛКМ — Выбор/Движение &nbsp;|&nbsp; X — Отмена приказа &nbsp;|&nbsp; Колесо — Зум</span>
+
+<!-- LOADING SCREEN -->
+<div id="loading">
+    <div id="loading-title">CSRN Multiplayer</div>
+    <div id="loading-sub">Загрузка игровых ресурсов...</div>
+    <div class="loading-bar-wrap">
+        <div class="loading-bar-fill"></div>
+    </div>
+</div>
 
 <!-- START SCREEN -->
 <div id="start-screen" style="display:none;">
@@ -3892,8 +3901,15 @@ function generateMap() {
                 createRegionBorders();
                 
                 const loading = document.getElementById('loading');
-                loading.style.opacity = '0';
-                setTimeout(() => { loading.style.display = 'none'; initGame(); }, 500);
+                if (loading) {
+                    loading.style.opacity = '0';
+                    setTimeout(() => { 
+                        loading.style.display = 'none'; 
+                        initGame(); 
+                    }, 500);
+                } else {
+                    initGame();
+                }
 
                 animate();
             }, 100);
