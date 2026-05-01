@@ -11,7 +11,7 @@ class MultiplayerClient {
         
         // Конфигурация
         this.serverUrl = window.location.origin; // Для локального тестирования
-        // this.serverUrl = 'https://your-app.onrender.com'; // Для production
+        // this.serverUrl = 'https://csrn.onrender.com'; // Для production
         
         this.setupEventHandlers();
     }
