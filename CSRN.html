@@ -526,6 +526,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-delaunay@6.0.4/dist/d3-delaunay.min.js"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    
+    <!-- MULTIPLAYER CLIENT -->
+    <script src="multiplayer-client.js"></script>
 </head>
 <body>
 
@@ -569,6 +573,7 @@
     <button id="btn-speed-1" class="tb-btn btn-speed active" onclick="setGameSpeed(1)">I</button>
     <button id="btn-speed-2" class="tb-btn btn-speed" onclick="setGameSpeed(2)">II</button>
     <button id="btn-speed-3" class="tb-btn btn-speed" onclick="setGameSpeed(3)">III</button>
+    <button id="mp-menu-btn" class="tb-btn" style="display:none;">🌐 Мультиплеер</button>
 </div>
 
     <div id="canvas-container"></div>
@@ -698,14 +703,16 @@
     <div class="hoi-corner-tl"></div><div class="hoi-corner-tr"></div>
     <div class="hoi-corner-bl"></div><div class="hoi-corner-br"></div>
     <span style="padding:6px 12px;display:block;">WASD — Камера &nbsp;|&nbsp; ЛКМ — Выбор/Движение &nbsp;|&nbsp; X — Отмена приказа &nbsp;|&nbsp; Колесо — Зум</span>
+</div>
+
+<!-- NOTIFICATION -->
+<div id="notification"></div>
 
 <!-- LOADING SCREEN -->
 <div id="loading">
-    <div id="loading-title">CSRN Multiplayer</div>
-    <div id="loading-sub">Загрузка игровых ресурсов...</div>
-    <div class="loading-bar-wrap">
-        <div class="loading-bar-fill"></div>
-    </div>
+    <div id="loading-title">ТЕАТР ВОЙНЫ</div>
+    <div id="loading-sub">Подготовка к сражению...</div>
+    <div class="loading-bar-wrap"><div class="loading-bar-fill"></div></div>
 </div>
 
 <!-- START SCREEN -->
@@ -3889,6 +3896,11 @@ function generateMap() {
                 container.appendChild(btn);
             });
             screen.style.display = 'flex';
+            
+            // Initialize multiplayer button after game starts
+            if (window.multiplayer) {
+                document.getElementById('mp-menu-btn').style.display = 'block';
+            }
         }
 
         window.onload = function() {
@@ -3901,15 +3913,8 @@ function generateMap() {
                 createRegionBorders();
                 
                 const loading = document.getElementById('loading');
-                if (loading) {
-                    loading.style.opacity = '0';
-                    setTimeout(() => { 
-                        loading.style.display = 'none'; 
-                        initGame(); 
-                    }, 500);
-                } else {
-                    initGame();
-                }
+                loading.style.opacity = '0';
+                setTimeout(() => { loading.style.display = 'none'; initGame(); }, 500);
 
                 animate();
             }, 100);
