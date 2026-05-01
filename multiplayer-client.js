@@ -10,7 +10,7 @@ class MultiplayerClient {
         this.callbacks = {};
         
         // Конфигурация
-        this.serverUrl = "https://csrn.onrender.com:10000";
+        this.serverUrl = "https://csrn.onrender.com";
         // this.serverUrl = 'https://your-app.onrender.com'; // Для production
     }
     
