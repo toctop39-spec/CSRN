@@ -10,7 +10,8 @@
   "dependencies": {
     "express": "^4.18.2",
     "socket.io": "^4.7.2",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "d3-delaunay": "^6.0.4"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
