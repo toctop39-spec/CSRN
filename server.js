@@ -1,8 +1,9 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
-const cors = require('cors');
 const path = require('path');
+const cors = require('cors');
+const Delaunator = require('d3-delaunay');
 const fs = require('fs');
 
 const app = express();
@@ -153,26 +154,18 @@ function startGame(gameId) {
 
 // Инициализация игровых данных
 function initializeGameData(game) {
-    // Генерация регионов (упрощенная версия)
-    const regions = [];
-    const regionCount = 50;
+    // Используем ту же конфигурацию, что и в клиенте
+    const CONFIG = {
+        width: 700, 
+        height: 550, 
+        pointsCount: 4000,
+        waterLevel: 0.22, 
+        mountainLevel: 0.75,
+        seed: game.id.hashCode() // Используем ID игры как seed для одинаковой карты
+    };
     
-    for (let i = 0; i < regionCount; i++) {
-        const region = {
-            id: i,
-            name: `Регион ${i + 1}`,
-            country: null,
-            isCity: Math.random() > 0.7,
-            isCapital: false,
-            economyLevel: Math.floor(Math.random() * 3) + 1,
-            height: Math.random() * 2,
-            biome: ['plains', 'forest', 'mountain', 'desert'][Math.floor(Math.random() * 4)],
-            polygon: generatePolygon(6, 50),
-            cx: Math.random() * 200 - 100,
-            cz: Math.random() * 200 - 100
-        };
-        regions.push(region);
-    }
+    // Генерация одинаковой карты для всех игроков
+    const regions = generateMapRegions(CONFIG);
     
     // Распределение стартовых регионов игрокам
     const playerCountries = Array.from(game.players.values()).map(p => p.country.id);
@@ -209,19 +202,70 @@ function initializeGameData(game) {
     });
 }
 
-// Генерация полигона региона
-function generatePolygon(sides, radius) {
-    const polygon = [];
-    for (let i = 0; i < sides; i++) {
-        const angle = (i / sides) * Math.PI * 2;
-        const r = radius * (0.8 + Math.random() * 0.4);
-        polygon.push([
-            Math.cos(angle) * r,
-            Math.sin(angle) * r
+// Генерация карты регионов (та же логика что в клиенте)
+function generateMapRegions(CONFIG) {
+    // Используем детерминированный random на основе seed
+    let seed = CONFIG.seed || 12345;
+    function seededRandom() {
+        seed = (seed * 9301 + 49297) % 233280;
+        return seed / 233280;
+    }
+    
+    // Генерация точек для триангуляции
+    const points = [];
+    for (let i = 0; i < CONFIG.pointsCount; i++) {
+        points.push([
+            seededRandom() * CONFIG.width,
+            seededRandom() * CONFIG.height
         ]);
     }
-    return polygon;
+    
+    // Создание регионов на основе триангуляции
+    const regions = [];
+    const delaunay = Delaunator.from(points);
+    
+    for (let i = 0; i < delaunay.triangles.length; i += 3) {
+        const triangle = [
+            points[delaunay.triangles[i]],
+            points[delaunay.triangles[i + 1]],
+            points[delaunay.triangles[i + 2]]
+        ];
+        
+        // Центр треугольника
+        const cx = (triangle[0][0] + triangle[1][0] + triangle[2][0]) / 3;
+        const cy = (triangle[0][1] + triangle[1][1] + triangle[2][1]) / 3;
+        
+        // Высота на основе шума
+        const height = seededRandom();
+        
+        regions.push({
+            id: regions.length,
+            polygon: triangle,
+            cx: cx,
+            cy: cy,
+            height: height,
+            isWater: height < CONFIG.waterLevel,
+            isMountain: height > CONFIG.mountainLevel,
+            country: null,
+            economyLevel: Math.floor(seededRandom() * 3) + 1,
+            isCity: seededRandom() > 0.8,
+            isCapital: false
+        });
+    }
+    
+    return regions;
 }
+
+// Хеш-функция для строки
+String.prototype.hashCode = function() {
+    let hash = 0;
+    for (let i = 0; i < this.length; i++) {
+        const char = this.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash);
+};
 
 // Игровой цикл
 function startGameLoop(gameId) {
