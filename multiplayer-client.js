@@ -10,8 +10,8 @@ class MultiplayerClient {
         this.callbacks = {};
         
         // Конфигурация
-        this.serverUrl = "https://csrn.onrender.com";
-        // this.serverUrl = 'https://your-app.onrender.com'; // Для production
+        this.serverUrl = window.location.origin; // Автоматически определит правильный порт
+        // Или явно: this.serverUrl = 'https://csrn.onrender.com';
     }
     
     // Настройка обработчиков событий
@@ -382,7 +382,7 @@ class MultiplayerIntegration {
         this.displayCountrySelection();
     }
     
-   // Отображение выбора стран
+    // Отображение выбора стран
     displayCountrySelection() {
         const container = document.getElementById('mp-countries-grid');
         // Используем те же страны, что и в основной игре
