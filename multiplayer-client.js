@@ -69,6 +69,22 @@ class MultiplayerClient {
         this.socket.on('gameStart', (data) => {
             console.log('Игра началась:', data);
             this.gameState = data.initialData;
+            
+            // Используем seed из ID игры для генерации той же карты
+            if (window.generateMap) {
+                // Передаем seed в генератор карты клиента
+                const seed = data.gameId.hashCode();
+                window.GAME_SEED = seed;
+                
+                // Перегенерируем карту с тем же seed
+                if (window.regions) {
+                    window.regions = [];
+                    window.generateMap();
+                    window.build3DMap();
+                    window.createRegionBorders();
+                }
+            }
+            
             this.trigger('gameStart', data);
         });
         
