@@ -33,14 +33,18 @@ const CONFIG = {
 // Инициализация базовой конфигурации
 const baseGameConfig = {
     countries: [
-        { id: 'russia', name: 'Россия', color: 0x0052cc, flag: [0x0052cc, 0xffffff, 0x0052cc] },
-        { id: 'germany', name: 'Германия', color: 0x000000, flag: [0x000000, 0xff0000, 0xffcc00] },
-        { id: 'france', name: 'Франция', color: 0x0055a4, flag: [0x0055a4, 0xffffff, 0xef4135] },
-        { id: 'britain', name: 'Британия', color: 0xcf142b, flag: [0xcf142b, 0xffffff, 0xcf142b] },
-        { id: 'italy', name: 'Италия', color: 0x009246, flag: [0x009246, 0xffffff, 0xce2b37] },
-        { id: 'spain', name: 'Испания', color: 0xaa151b, flag: [0xaa151b, 0xffc400, 0xaa151b] },
-        { id: 'poland', name: 'Польша', color: 0xffffff, flag: [0xffffff, 0xdc143c, 0xffffff] },
-        { id: 'turkey', name: 'Турция', color: 0xe30a17, flag: [0xe30a17, 0xffffff, 0xe30a17] }
+        { id: 1, name: 'Красная Империя', color: 0xb71c1c, flag: [0xcc0000, 0xffffff, 0x880000] },
+        { id: 2, name: 'Свободные Штаты', color: 0x006064, flag: [0x005f73, 0x0a9396, 0x94d2bd] },
+        { id: 3, name: 'Стальной Пакт', color: 0x4a148c, flag: [0x3c096c, 0x9d4edd, 0x1a0030] },
+        { id: 4, name: 'Северная Уния', color: 0xe65100, flag: [0xffffff, 0xff9100, 0x333333] },
+        { id: 5, name: 'Империя Солнца', color: 0x1b5e20, flag: [0x55a630, 0xffd700, 0x2d6a4f] },
+        { id: 6, name: 'Золотая Орда', color: 0xf57f17, flag: [0xf57f17, 0xffd54f, 0x795548] },
+        { id: 7, name: 'Морская Держава', color: 0x0d47a1, flag: [0x0d47a1, 0x90caf9, 0xffffff] },
+        { id: 8, name: 'Пустынный Халифат', color: 0xa67c00, flag: [0x388e3c, 0xffffff, 0xa67c00] },
+        { id: 9, name: 'Ледяной Предел', color: 0x546e7a, flag: [0x546e7a, 0xeceff1, 0x263238] },
+        { id: 10, name: 'Тигровый Союз', color: 0x880e4f, flag: [0x880e4f, 0xff4081, 0x1a0011] },
+        { id: 11, name: 'Речная Конфедерация', color: 0x33691e, flag: [0x33691e, 0x8bc34a, 0x795548] },
+        { id: 12, name: 'Железный Трон', color: 0x37474f, flag: [0x37474f, 0xb0bec5, 0x000000] }
     ]
 };
 
@@ -576,7 +580,9 @@ app.get('/', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`Сервер запущен на порту ${PORT}`);
-    console.log(`URL: http://localhost:${PORT}`);
+
+// Запуск сервера
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log(`WebSocket server ready`);
 });
