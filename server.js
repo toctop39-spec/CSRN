@@ -430,18 +430,23 @@ io.on('connection', (socket) => {
     // Готовность игрока
     socket.on('playerReady', (data) => {
         const playerData = players.get(socket.id);
-        if (!playerData) return;
+        if (!playerData || !playerData.gameId) return;
         
-        const { game, player } = playerData;
+        const game = games.get(playerData.gameId);
+        if (!game) return;
+        
+        const player = game.players.get(socket.id);
+        if (!player) return;
+        
         player.ready = data.ready;
         
         // Проверка, можно ли начать игру
         if (player.ready && game.players.size >= 2) {
-            startGame(game.id);
+            startGame(playerData.gameId);
         }
         
         // Обновление лобби
-        io.to(game.id).emit('lobbyUpdate', {
+        io.to(playerData.gameId).emit('lobbyUpdate', {
             players: Array.from(game.players.values()),
             status: game.status
         });
