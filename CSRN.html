@@ -756,6 +756,18 @@ let borderLines = null; // Для хранения линий границ в 2D
         let combats = []; // Активные бои
         let playerStats = { money: 10000, income: 0, upkeep: 0, manpower: 1000, manpowerIncome: 0, politicalPower: 0 };
         let playerCountry = null;
+        let GAME_SEED = null; // Seed для синхронизации карты в мультиплеере
+        
+        // Хеш-функция для синхронизации карты
+        String.prototype.hashCode = function() {
+            let hash = 0;
+            for (let i = 0; i < this.length; i++) {
+                const char = this.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return Math.abs(hash);
+        };
         
         // Troop management
         let troopTargets = { soldier: 0, tank: 0 };
@@ -1062,7 +1074,20 @@ let borderLines = null; // Для хранения линий границ в 2D
             });
         }
 function generateMap() {
-                let points = Array.from({length: CONFIG.pointsCount}, () => [Math.random() * CONFIG.width, Math.random() * CONFIG.height]);
+                // Используем seed для детерминированной генерации в мультиплеере
+                let seed = GAME_SEED || Date.now();
+                let randomIndex = 0;
+                
+                function seededRandom() {
+                    if (GAME_SEED) {
+                        randomIndex++;
+                        return (Math.sin(seed * randomIndex) * 10000) % 1;
+                    } else {
+                        return Math.random();
+                    }
+                }
+                
+                let points = Array.from({length: CONFIG.pointsCount}, () => [seededRandom() * CONFIG.width, seededRandom() * CONFIG.height]);
                 for (let i = 0; i < 2; i++) {
                     let tempDelaunay = d3.Delaunay.from(points); let tempVoronoi = tempDelaunay.voronoi([0, 0, CONFIG.width, CONFIG.height]);
                     points = points.map((p, j) => {
